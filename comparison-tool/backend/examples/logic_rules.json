@@ -1,0 +1,30 @@
+{
+  "facts": [
+    {"predicate": "parent", "subject": "Alice", "object": "Carol"},
+    {"predicate": "parent", "subject": "Bob", "object": "Carol"},
+    {"predicate": "parent", "subject": "Carol", "object": "Frank"},
+    {"predicate": "parent", "subject": "Carol", "object": "Grace"},
+    {"predicate": "parent", "subject": "Eve", "object": "Henry"},
+    {"predicate": "female", "subject": "Alice", "object": "true"},
+    {"predicate": "female", "subject": "Carol", "object": "true"},
+    {"predicate": "female", "subject": "Eve", "object": "true"},
+    {"predicate": "female", "subject": "Grace", "object": "true"},
+    {"predicate": "male", "subject": "Bob", "object": "true"},
+    {"predicate": "male", "subject": "Frank", "object": "true"},
+    {"predicate": "male", "subject": "Henry", "object": "true"}
+  ],
+  "rules": [
+    {
+      "name": "grandparent",
+      "description": "If X is parent of Y and Y is parent of Z, then X is grandparent of Z",
+      "premises": ["parent(X,Y)", "parent(Y,Z)"],
+      "conclusion": "grandparent(X,Z)"
+    },
+    {
+      "name": "aunt",
+      "description": "If X is parent of Y, Z is parent of X, Z is parent of W, W is female, and W != X, then W is aunt of Y",
+      "premises": ["parent(X,Y)", "parent(Z,X)", "parent(Z,W)", "female(W)", "W!=X"],
+      "conclusion": "aunt(W,Y)"
+    }
+  ]
+}

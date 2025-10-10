@@ -1,0 +1,16 @@
+source,target,relationship,weight
+Alice,Bob,friend,0.9
+Alice,Carol,colleague,0.7
+Bob,Dave,friend,0.8
+Bob,Eve,colleague,0.6
+Carol,Frank,friend,0.85
+Carol,Grace,colleague,0.75
+Dave,Henry,friend,0.9
+Eve,Frank,friend,0.8
+Frank,Grace,colleague,0.7
+Grace,Henry,friend,0.85
+Alice,Dave,friend,0.6
+Bob,Carol,colleague,0.5
+Dave,Frank,friend,0.7
+Eve,Grace,colleague,0.8
+Henry,Alice,colleague,0.65

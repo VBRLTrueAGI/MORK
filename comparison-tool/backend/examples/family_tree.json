@@ -1,0 +1,25 @@
+{
+  "people": [
+    {"id": "1", "name": "Alice Smith", "age": 65, "gender": "F"},
+    {"id": "2", "name": "Bob Smith", "age": 67, "gender": "M"},
+    {"id": "3", "name": "Carol Johnson", "age": 42, "gender": "F"},
+    {"id": "4", "name": "Dave Johnson", "age": 44, "gender": "M"},
+    {"id": "5", "name": "Eve Smith", "age": 40, "gender": "F"},
+    {"id": "6", "name": "Frank Davis", "age": 20, "gender": "M"},
+    {"id": "7", "name": "Grace Davis", "age": 18, "gender": "F"},
+    {"id": "8", "name": "Henry Smith", "age": 15, "gender": "M"}
+  ],
+  "relationships": [
+    {"from": "1", "to": "3", "type": "parent"},
+    {"from": "2", "to": "3", "type": "parent"},
+    {"from": "1", "to": "5", "type": "parent"},
+    {"from": "2", "to": "5", "type": "parent"},
+    {"from": "3", "to": "6", "type": "parent"},
+    {"from": "4", "to": "6", "type": "parent"},
+    {"from": "3", "to": "7", "type": "parent"},
+    {"from": "4", "to": "7", "type": "parent"},
+    {"from": "5", "to": "8", "type": "parent"},
+    {"from": "1", "to": "2", "type": "married"},
+    {"from": "3", "to": "4", "type": "married"}
+  ]
+}

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MORK vs Neo4j Performance Comparison</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🚀 MORK vs Neo4j Performance Comparison</h1>
+            <p class="subtitle">Compare hypergraph processing performance across different workloads</p>
+            <div class="status-indicators">
+                <div class="status-item">
+                    <span class="status-label">MORK:</span>
+                    <span id="mork-status" class="status-indicator">⚪ Checking...</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Neo4j:</span>
+                    <span id="neo4j-status" class="status-indicator">⚪ Checking...</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Upload Section -->
+        <section class="section" id="upload-section">
+            <h2>📁 Upload Your Data</h2>
+            <div class="upload-container">
+                <div class="drop-zone" id="drop-zone">
+                    <div class="drop-zone-content">
+                        <div class="upload-icon">📤</div>
+                        <p class="drop-text">Drag & drop your JSON or CSV file here</p>
+                        <p class="drop-subtext">or click to browse</p>
+                        <input type="file" id="file-input" accept=".json,.csv" style="display: none;">
+                    </div>
+                </div>
+                
+                <div class="file-info" id="file-info" style="display: none;">
+                    <h3>📊 File Analysis</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>File:</label>
+                            <span id="file-name"></span>
+                        </div>
+                        <div class="info-item">
+                            <label>Size:</label>
+                            <span id="file-size"></span>
+                        </div>
+                        <div class="info-item">
+                            <label>Format:</label>
+                            <span id="file-format"></span>
+                        </div>
+                        <div class="info-item">
+                            <label>Estimated Nodes:</label>
+                            <span id="estimated-nodes"></span>
+                        </div>
+                        <div class="info-item">
+                            <label>Estimated Relationships:</label>
+                            <span id="estimated-relationships"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="sample-data">
+                        <h4>📋 Sample Data</h4>
+                        <pre id="sample-data-content"></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benchmark Configuration -->
+        <section class="section" id="config-section" style="display: none;">
+            <h2>⚙️ Benchmark Configuration</h2>
+            <div class="config-container">
+                <div class="test-categories">
+                    <h3>Select Test Categories</h3>
+                    <div class="category-grid">
+                        <div class="category-card" data-category="knowledge_graphs">
+                            <h4>🧠 Knowledge Graphs</h4>
+                            <p>Relationship traversal, multi-hop queries, property filtering</p>
+                            <label class="checkbox-container">
+                                <input type="checkbox" name="categories" value="knowledge_graphs">
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="category-card" data-category="graph_algorithms">
+                            <h4>🔗 Graph Algorithms</h4>
+                            <p>Clique detection, shortest paths, connected components</p>
+                            <label class="checkbox-container">
+                                <input type="checkbox" name="categories" value="graph_algorithms">
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="category-card" data-category="logical_inference">
+                            <h4>🧮 Logical Inference</h4>
+                            <p>Pattern matching, rule application, unification</p>
+                            <label class="checkbox-container">
+                                <input type="checkbox" name="categories" value="logical_inference">
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="benchmark-controls">
+                    <button id="start-benchmark" class="btn btn-primary" disabled>
+                        🏁 Start Benchmark
+                    </button>
+                    <button id="use-example-data" class="btn btn-secondary">
+                        📋 Use Example Data
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Progress Section -->
+        <section class="section" id="progress-section" style="display: none;">
+            <h2>⏱️ Benchmark Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <div class="progress-info">
+                    <span id="progress-text">Preparing benchmark...</span>
+                    <span id="progress-percent">0%</span>
+                </div>
+                <div class="current-test">
+                    <strong>Current Test:</strong> <span id="current-test">-</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section class="section" id="results-section" style="display: none;">
+            <h2>📈 Benchmark Results</h2>
+            
+            <!-- Summary Cards -->
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <h3>Overall Winner</h3>
+                    <div class="winner-display" id="overall-winner">
+                        <span class="winner-name">-</span>
+                        <span class="winner-factor">-</span>
+                    </div>
+                </div>
+                
+                <div class="summary-card">
+                    <h3>Speed Comparison</h3>
+                    <div class="metric-display" id="speed-comparison">
+                        <span class="metric-value">-</span>
+                        <span class="metric-unit">avg speedup</span>
+                    </div>
+                </div>
+                
+                <div class="summary-card">
+                    <h3>Memory Efficiency</h3>
+                    <div class="metric-display" id="memory-comparison">
+                        <span class="metric-value">-</span>
+                        <span class="metric-unit">efficiency ratio</span>
+                    </div>
+                </div>
+                
+                <div class="summary-card">
+                    <h3>Tests Completed</h3>
+                    <div class="metric-display" id="tests-completed">
+                        <span class="metric-value">-</span>
+                        <span class="metric-unit">total tests</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Charts -->
+            <div class="charts-container">
+                <div class="chart-section">
+                    <h3>⚡ Execution Time Comparison</h3>
+                    <canvas id="execution-time-chart"></canvas>
+                </div>
+                
+                <div class="chart-section">
+                    <h3>💾 Memory Usage Comparison</h3>
+                    <canvas id="memory-usage-chart"></canvas>
+                </div>
+            </div>
+
+            <!-- Detailed Results Table -->
+            <div class="results-table-container">
+                <h3>📋 Detailed Test Results</h3>
+                <div class="table-controls">
+                    <select id="category-filter">
+                        <option value="">All Categories</option>
+                        <option value="knowledge_graphs">Knowledge Graphs</option>
+                        <option value="graph_algorithms">Graph Algorithms</option>
+                        <option value="logical_inference">Logical Inference</option>
+                    </select>
+                </div>
+                
+                <table class="results-table" id="results-table">
+                    <thead>
+                        <tr>
+                            <th>Test Name</th>
+                            <th>Category</th>
+                            <th>MORK Time (ms)</th>
+                            <th>Neo4j Time (ms)</th>
+                            <th>Speedup Factor</th>
+                            <th>Memory Ratio</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody id="results-table-body">
+                        <!-- Results will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Recommendations -->
+            <div class="recommendations-container">
+                <h3>💡 Recommendations</h3>
+                <ul id="recommendations-list">
+                    <!-- Recommendations will be populated here -->
+                </ul>
+            </div>
+
+            <!-- Export Options -->
+            <div class="export-container">
+                <h3>📤 Export Results</h3>
+                <div class="export-buttons">
+                    <button id="export-json" class="btn btn-secondary">Export JSON</button>
+                    <button id="export-csv" class="btn btn-secondary">Export CSV</button>
+                    <button id="export-report" class="btn btn-secondary">Generate Report</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Examples Modal -->
+        <div class="modal" id="examples-modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>📋 Example Datasets</h3>
+                    <span class="close" id="close-examples">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div class="examples-grid" id="examples-grid">
+                        <!-- Example datasets will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay" style="display: none;">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Processing...</div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
